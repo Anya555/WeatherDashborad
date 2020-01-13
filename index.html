@@ -25,16 +25,39 @@
     <!--making search area input-->
     <div class="container">
         <div class="row">
-            <form>
-                <input type="text" placeholder="Search.." name="search">
-                <button type="submit"><i class="fa fa-search"></i></button>
-            </form>
+            <div class="col-md-3">
+                <form>
+                    <input type="text" placeholder="Search.." name="search" id="search-line">
+                    <button type="submit" id="search-button"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
         </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div id="city-area"></div>
+            </div>
+
+           
+            <div class="col-1"></div>
+            <div id="current-city">
+            </div>
+        </div>
+        <br>
+
+       
+
+
+
     </div>
 
-    <br>
+
+
     
-    <div class="container" id="city-area"> </div>
+
+   
 
     <script src="main.js"></script>
 </body>
