@@ -1,20 +1,26 @@
 $(document).ready(function () {
 
-    // declaring my personal api key as a global variable so I can use it to make multiple ajax calls
+    // declaring my personal api key  as a global variable so I can use it to make multiple ajax calls
     var appId = "4711f10374bfd72a56667451d010a86c";
+
+    // declaring all query urls needed for making ajax calls
     var queryURL = "https://api.openweathermap.org/data/2.5/weather";
     var fiveDayURL = "https://api.openweathermap.org/data/2.5/forecast";
     var uvUrl = "https://api.openweathermap.org/data/2.5/uvi";
-    var searchInput = "";
+
+
     var cityList = [];
    
+    // storing searched cities list into local storage so it stays on page after reloading it
     var updateCityList = function(){
         localStorage.setItem("cityList", JSON.stringify(cityList));
     }
 
+
+   // dynamically generating buttons to display  city search history
     var renderCityList = function(){
         var textBlock = $("div#city-list");
-        textBlock.html("").addClass("text-block");
+        textBlock.html("").addClass("col-2 text-block");
         
         if( cityList.length ){
             console.log(cityList);
@@ -29,7 +35,7 @@ $(document).ready(function () {
         }
     }    
 
-    // getting data from search line and saving it to textarea
+    // getting data from local storage
     var getFromLocalStorage = function(){
         if( localStorage.getItem("cityList") ){
             cityList = JSON.parse(localStorage.getItem("cityList"));
@@ -47,8 +53,10 @@ $(document).ready(function () {
         }
 
         console.log("lookup");
+
         // clearing previous content
         $("#current-city").html("");
+        $("#five-day").html("");
 
         $.ajax({
             url: queryURL,
@@ -61,9 +69,7 @@ $(document).ready(function () {
         }).then(function (response) {
             console.log(response);
 
-            // clearing previous content
-            $("#five-day").html("");
-
+            
             // displaying the city that user is searching for    
             var h1 = $("<h1>");
             h1.text(response.name);
@@ -191,6 +197,7 @@ $(document).ready(function () {
         lookupCity(city);
     });
 
+      // adding an event handler on a city history buttons
     $(document).on("click", "button.btn", function (e) {
         e.preventDefault();
         var attrCity = $(this).attr("city-name");
