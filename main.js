@@ -8,21 +8,20 @@ $(document).ready(function () {
     var fiveDayURL = "https://api.openweathermap.org/data/2.5/forecast";
     var uvUrl = "https://api.openweathermap.org/data/2.5/uvi";
 
-
     var cityList = [];
-   
+
     // storing searched cities list into local storage so it stays on page after reloading it
-    var updateCityList = function(){
+    var updateCityList = function () {
         localStorage.setItem("cityList", JSON.stringify(cityList));
     }
 
 
-   // dynamically generating buttons to display  city search history
-    var renderCityList = function(){
+    // dynamically generating buttons to display  city search history
+    var renderCityList = function () {
         var textBlock = $("div#city-list");
         textBlock.html("").addClass("col-2 text-block");
-        
-        if( cityList.length ){
+
+        if (cityList.length) {
             console.log(cityList);
             for (var i = 0; i < cityList.length; i++) {
                 var button = $("<button>");
@@ -33,20 +32,20 @@ $(document).ready(function () {
             }
 
         }
-    }    
+    }
 
     // getting data from local storage
-    var getFromLocalStorage = function(){
-        if( localStorage.getItem("cityList") ){
+    var getFromLocalStorage = function () {
+        if (localStorage.getItem("cityList")) {
             cityList = JSON.parse(localStorage.getItem("cityList"));
         }
         console.log(cityList);
     }
 
-   
-    // making an ajax call for a current day weather query 
+
+    // adding searched city to a list
     var lookupCity = function (city) {
-        if( cityList.indexOf(city) === -1 ){
+        if (cityList.indexOf(city) === -1) {
             console.log("adding city: " + city);
             cityList.push(city);
             updateCityList();
@@ -58,18 +57,19 @@ $(document).ready(function () {
         $("#current-city").html("");
         $("#five-day").html("");
 
+        // making an ajax call for a current day weather query 
         $.ajax({
             url: queryURL,
             method: "GET",
             data: {
                 q: city,
                 APPID: appId,
-                units: "imperial" // For temperature in Fahrenheit use units=imperial
+                units: "imperial" // For temperature in Fahrenheits 
             }
         }).then(function (response) {
             console.log(response);
 
-            
+
             // displaying the city that user is searching for    
             var h1 = $("<h1>");
             h1.text(response.name);
@@ -105,8 +105,8 @@ $(document).ready(function () {
             // making an ajax call to get data for uv index
             var cityLon = response.coord.lon;
             var cityLat = response.coord.lat;
-            
 
+            // making ajax call for UV index
             $.ajax({
                 url: uvUrl,
                 method: "GET",
@@ -127,7 +127,7 @@ $(document).ready(function () {
 
                 // current day. using prepend to move it to the top   
                 var p = $("<p>");
-                console.log(resp.date_iso.split("T")); 
+                console.log(resp.date_iso.split("T"));
                 p.text(resp.date_iso.split("T")[0]);  //using split method, so the hour doesn't get displayed
                 $("#current-city").prepend(p);
 
@@ -141,7 +141,7 @@ $(document).ready(function () {
                 data: {
                     q: city,
                     APPID: appId,
-                    units: "imperial" // For temperature in Fahrenheit use units=imperial
+                    units: "imperial" // For temperature in Fahrenheits
                 }
             }).then(function (result) {
                 console.log(result);
@@ -194,10 +194,11 @@ $(document).ready(function () {
     $("#search-button").on("click", function (e) {
         e.preventDefault();
         var city = $("#search-line").val().trim();
+        $("#search-line").val("");
         lookupCity(city);
     });
 
-      // adding an event handler on a city history buttons
+    // adding an event handler on a city history buttons
     $(document).on("click", "button.btn", function (e) {
         e.preventDefault();
         var attrCity = $(this).attr("city-name");
