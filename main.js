@@ -1,16 +1,16 @@
 $(document).ready(function () {
 
-    // declaring my personal api key  as a global variable so I can use it to make multiple ajax calls
+    //  api key  as a global variable so I can use it to make multiple ajax calls
     var appId = "4711f10374bfd72a56667451d010a86c";
 
-    // declaring all query urls needed for making ajax calls
+    // all query urls needed for making ajax calls
     var queryURL = "https://api.openweathermap.org/data/2.5/weather";
     var fiveDayURL = "https://api.openweathermap.org/data/2.5/forecast";
     var uvUrl = "https://api.openweathermap.org/data/2.5/uvi";
 
     var cityList = [];
 
-    // storing searched cities list into local storage so it stays on page after reloading it
+    // storing searched cities list into local storage 
     var updateCityList = function () {
         localStorage.setItem("cityList", JSON.stringify(cityList));
     }
@@ -56,8 +56,9 @@ $(document).ready(function () {
         // clearing previous content
         $("#current-city").html("");
         $("#five-day").html("");
+        $(".heading").html("");
 
-        // making an ajax call for a current day weather query 
+        //  ajax call for a current day weather query 
         $.ajax({
             url: queryURL,
             method: "GET",
@@ -71,9 +72,9 @@ $(document).ready(function () {
 
 
             // displaying the city that user is searching for    
-            var h1 = $("<h1>");
-            h1.text(response.name);
-            $("#current-city").append(h1);
+            var h3 = $("<h3>");
+            h3.text(response.name);
+            $("#current-city").append(h3);
 
             var icon = $("<img>");
             icon.attr("src", "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png");
@@ -102,11 +103,10 @@ $(document).ready(function () {
             li3.val(response.wind.speed);
             $("#current-city").append(li3);
 
-            // making an ajax call to get data for uv index
+            // ajax call to get data for uv index
             var cityLon = response.coord.lon;
             var cityLat = response.coord.lat;
 
-            // making ajax call for UV index
             $.ajax({
                 url: uvUrl,
                 method: "GET",
@@ -125,7 +125,7 @@ $(document).ready(function () {
                 li4.text("UV: " + resp.value);
                 $("#current-city").append(li4);
 
-                // current day. using prepend to move it to the top   
+                // current date 
                 var p = $("<p>");
                 console.log(resp.date_iso.split("T"));
                 p.text(resp.date_iso.split("T")[0]);  //using split method, so the hour doesn't get displayed
@@ -133,7 +133,7 @@ $(document).ready(function () {
 
             });
 
-            // making  an ajax call to get data for 5 day forecast
+            // ajax call to get data for 5 day forecast
 
             $.ajax({
                 url: fiveDayURL,
@@ -148,13 +148,17 @@ $(document).ready(function () {
 
                 // looping through list array. it returns  40 objects:
                 // 5 days forecast for every 3 hours
+                var h2 = $("<h2>");
+                h2.text("Five Day Forecast")
+                $(".heading").append(h2);
 
                 for (var i = 0; i < 8; i++) {
                     var day = result.list[i * 8];
 
-                    // making divs as placeholders to display received data and adding to them in style.css file
+                  
+                    // placeholders for 5 day forecast
                     var display = $("<div>");
-                    display.addClass("display");
+                    display.addClass("col-md-2 display");
 
                     //  date
                     var p = $("<p>");
