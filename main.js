@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    userLocationWeather();
     //  api key  as a global variable so I can use it to make multiple ajax calls
     var appId = "4711f10374bfd72a56667451d010a86c";
 
@@ -10,16 +11,48 @@ $(document).ready(function () {
 
     var cityList = [];
 
+
+    function userLocationWeather(){
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat =  position.coords.latitude;
+                var lon =  position.coords.longitude;
+                // lat = lat.split(".");
+                // lon = lon.split(".");
+                console.log(lat);
+                console.log(lon);
+             getCurrentWeather(lat,lon);
+            });
+          } else {
+            console.log("Geolocation is not supported by this browser.");
+          }
+    }
+
+    function getCurrentWeather(lat,lon){
+        $.ajax({
+            url: queryURL,
+            method: "GET",
+            data: {
+                APPID: appId,
+                lat: lat,
+                lon: lon
+            }
+        }).then(function (response) {
+            console.log(response);
+          });
+    }
+  
+  
     // storing searched cities list into local storage 
     var updateCityList = function () {
-        localStorage.setItem("cityList", JSON.stringify(cityList));
+        localStorage.setItem("cityList",  JSON.stringify(cityList));
     }
 
 
     // dynamically generating buttons to display  city search history
     var renderCityList = function () {
         var textBlock = $("div#city-list");
-        textBlock.html("").addClass("col-2 text-block");
+        textBlock.html("").addClass("col-12 text-block");
 
         if (cityList.length) {
             console.log(cityList);
@@ -104,8 +137,8 @@ $(document).ready(function () {
             $("#current-city").append(li3);
 
             // ajax call to get data for uv index
-            var cityLon = response.coord.lon;
-            var cityLat = response.coord.lat;
+           var cityLon = response.coord.lon;
+           var cityLat = response.coord.lat;
 
             $.ajax({
                 url: uvUrl,
@@ -194,7 +227,7 @@ $(document).ready(function () {
         renderCityList();
     }
 
-    // adding an event handler on a search button
+    // search button
     $("#search-button").on("click", function (e) {
         e.preventDefault();
         var city = $("#search-line").val().trim();
@@ -202,7 +235,7 @@ $(document).ready(function () {
         lookupCity(city);
     });
 
-    // adding an event handler on a city history buttons
+    //history buttons
     $(document).on("click", "button.btn", function (e) {
         e.preventDefault();
         var attrCity = $(this).attr("city-name");
