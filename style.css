@@ -39,13 +39,12 @@ nav{
 }
 
 
-
 #current-city{
     background-color:lightseagreen;
     border-radius: 5px;
-    text-align: center;
     color:black;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-align: center;
 }
 
 li{
@@ -53,12 +52,8 @@ li{
 }
 
 img{
-    height: 40px;
-    margin-top: 0px;
-    display: block;
-    margin: 0 auto;
+    height: 50px;
 }
-
 
 .display{
     background-color:lightseagreen;
