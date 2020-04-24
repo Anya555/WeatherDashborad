@@ -1,7 +1,8 @@
 $(document).ready(function () {
 
+    // prompting user to allow location access to get their lon and lat data
     userLocationWeather();
-    //  api key  as a global variable so I can use it to make multiple ajax calls
+    //  api key  
     var appId = "4711f10374bfd72a56667451d010a86c";
 
     // all query urls needed for making ajax calls
@@ -32,7 +33,7 @@ $(document).ready(function () {
     // getting weather for user's location
     function getWeather(lat, lon) {
 
-    // current weather
+        // current weather
         $.ajax({
             url: queryURL,
             method: "GET",
@@ -51,9 +52,9 @@ $(document).ready(function () {
             $("#current-city").prepend(h6);
 
             // user's location name
-            var h3 = $("<h3>");
-            h3.text(response.name);
-            $("#current-city").append(h3);
+            var h4 = $("<h4>");
+            h4.text(response.name);
+            $("#current-city").append(h4);
 
             // weather icon
             var icon = $("<img>");
@@ -66,17 +67,17 @@ $(document).ready(function () {
             li1.val(response.main.temp);
             $("#current-city").append(li1);
 
-             // humidity
-             var li2 = $("<li>");
-             li2.text("Humidity: " + response.main.humidity + " %");
-             li2.val(response.main.humidity);
-             $("#current-city").append(li2);
- 
-             // wind speed
-             var li3 = $("<li>");
-             li3.text("Wind speed: " + response.wind.speed + " MPH");
-             li3.val(response.wind.speed);
-             $("#current-city").append(li3);
+            // humidity
+            var li2 = $("<li>");
+            li2.text("Humidity: " + response.main.humidity + " %");
+            li2.val(response.main.humidity);
+            $("#current-city").append(li2);
+
+            // wind speed
+            var li3 = $("<li>");
+            li3.text("Wind speed: " + response.wind.speed + " MPH");
+            li3.val(response.wind.speed);
+            $("#current-city").append(li3);
         });
 
         // ajax call to get data for 5 day forecast
@@ -95,9 +96,9 @@ $(document).ready(function () {
 
             // looping through list array. it returns  40 objects:
             // 5 days forecast for every 3 hours
-            var h2 = $("<h2>");
-            h2.text("Five Day Forecast")
-            $(".heading").append(h2);
+            var h3 = $("<h3>");
+            h3.text("Five Day Forecast")
+            $(".heading").append(h3);
 
 
             for (var i = 0; i < 8; i++) {
@@ -138,28 +139,38 @@ $(document).ready(function () {
     }
 
 
-    // storing searched cities list into local storage 
-    var updateCityList = function () {
-        localStorage.setItem("cityList", JSON.stringify(cityList));
-    }
-
-
     // dynamically generating buttons to display  city search history
     var renderCityList = function () {
         var textBlock = $("div#city-list");
-        textBlock.html("").addClass("col-12 text-block");
+        textBlock.html("").addClass("text-block");
 
         if (cityList.length) {
             console.log(cityList);
             for (var i = 0; i < cityList.length; i++) {
+
+
                 var button = $("<button>");
-                button.addClass("btn");
+                button.addClass("col-10 btn");
                 button.attr("city-name", cityList[i]);
                 button.text(cityList[i]);
                 $("div#city-list").append(button);
+
+
+                var del = $("<button>");
+                del.text("x");
+                del.attr("city-name", cityList[i]);
+                del.addClass("col-1 delete");
+                $("div#city-list").append(del);
             }
 
         }
+    }
+
+    // =======================================Local Storage===================================//
+
+     // storing searched cities list into local storage 
+     var updateCityList = function () {
+        localStorage.setItem("cityList", JSON.stringify(cityList));
     }
 
     // getting data from local storage
@@ -170,7 +181,14 @@ $(document).ready(function () {
         console.log(cityList);
     }
 
-    // displaying weather for a city that user is searching for
+    
+    function removeFromLocalStorage() {
+        localStorage.removeItem("cityList");
+    }
+
+
+    //----------------- displaying weather for a city that user is searching for------------//
+
     // adding searched city to a list
     var lookupCity = function (city) {
         if (cityList.indexOf(city) === -1) {
@@ -179,7 +197,7 @@ $(document).ready(function () {
             updateCityList();
         }
 
-        console.log("lookup");
+        // console.log("lookup");
 
         // clearing previous content
         $("#current-city").html("");
@@ -199,11 +217,13 @@ $(document).ready(function () {
         }).then(function (response) {
             console.log(response);
 
-            // displaying the city that user is searching for    
-            var h3 = $("<h3>");
-            h3.text(response.name);
-            $("#current-city").append(h3);
 
+            // displaying the city that user is searching for    
+            var h4 = $("<h4>");
+            h4.text(response.name);
+            $("#current-city").append(h4);
+
+            // weather icon
             var icon = $("<img>");
             icon.attr("src", "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png");
             $("#current-city").append(icon);
@@ -270,9 +290,9 @@ $(document).ready(function () {
 
                 // looping through list array. it returns  40 objects:
                 // 5 days forecast for every 3 hours
-                var h2 = $("<h2>");
-                h2.text("Five Day Forecast")
-                $(".heading").append(h2);
+                var h3 = $("<h3>");
+                h3.text("Five Day Forecast")
+                $(".heading").append(h3);
 
 
                 for (var i = 0; i < 8; i++) {
@@ -316,6 +336,7 @@ $(document).ready(function () {
         renderCityList();
     }
 
+
     // search button
     $("#search-button").on("click", function (e) {
         e.preventDefault();
@@ -331,6 +352,20 @@ $(document).ready(function () {
         lookupCity(attrCity);
     });
 
+    // delete button for city
+    $(document).on("click", "button.delete", function (e, city) {
+        e.preventDefault();
+        // console.log("click");
+        var attrCity = $(this).attr("city-name");
+        for(let i = 0; i < cityList.length; i++){
+        cityList.splice(city===attrCity[i]);
+        }
+      
+        removeFromLocalStorage(attrCity);
+        renderCityList();
+    });
+   
+    
     getFromLocalStorage();
     renderCityList();
 });

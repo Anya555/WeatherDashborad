@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -33,42 +32,51 @@
                 <form autocomplete="off">
                     <input type="text" placeholder="Search.." name="search" id="search-line">
                     <button type="submit" id="search-button"><i class="fa fa-search"></i></button>
-                </input>
+                    </input>
                 </form>
-                <br><br>
+                <br>
 
                 <!--city search history displayed here-->
-    
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3 col-sm-12">
                 <div id="city-list"></div>
             </div>
+          
+
 
 
             <!--current city information displayed here-->
+            <br>
+            <div class="col-md-8 offset-sm-1">
+                <div class="col-md-11 col-sm-12">
+                    <div id="current-city"></div>
+                </div>
 
-            <div class="col-md-7 offset-sm-1 col-sm-12">
-                <br>
-                <div id="current-city"></div>
+                <!-- <br><br> -->
+
+                <!--5 days weather forecast displayed here-->
+
+                <!-- <div class="row"> -->
+                <div class="col-md-8 offset-sm-2 col-sm-12">
+                    <br>
+                    <div class="heading"></div>
+                </div>
+                <div class="col-12">
+                    <div id="five-day"> </div>
+                </div>
+
             </div>
+
+            <!-- </div> -->
+            <br><br>
+
         </div>
-        <br><br>
 
-        <!--5 days weather forecast displayed here-->
-
-        <div class="row">
-            <div class="col-md-8 offset-sm-4">
-                <div class="heading"></div>
-            </div>
-            <div class="col-md-8 offset-sm-4">
-                <div  id="five-day"> </div>
-            </div>
-        </div>
-        <br><br>
-
-
-    </div>
-
-
-    <script src="main.js"></script>
+</div>
+        <script src="main.js"></script>
 
 </body>
 
