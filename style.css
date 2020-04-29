@@ -11,6 +11,10 @@ p, h3{
     padding:0px;
 }
 
+.celcius{
+    width: fit-content
+}
+
 .btn{
     height: 40px;
 }
