@@ -150,7 +150,7 @@ $(document).ready(function () {
         textBlock.html("").addClass("text-block");
 
         if (cityList.length) {
-            console.log(cityList);
+            // console.log(cityList);
             for (var i = 0; i < cityList.length; i++) {
 
 
@@ -183,12 +183,7 @@ $(document).ready(function () {
         if (localStorage.getItem("cityList")) {
             cityList = JSON.parse(localStorage.getItem("cityList"));
         }
-        console.log(cityList);
-    }
-
-
-    function removeFromLocalStorage() {
-        localStorage.removeItem("cityList");
+        // console.log(cityList);
     }
 
 
@@ -197,7 +192,7 @@ $(document).ready(function () {
     // adding searched city to a list
     var lookupCity = function (city) {
         if (cityList.indexOf(city) === -1) {
-            console.log("adding city: " + city);
+            // console.log("adding city: " + city);
             cityList.push(city);
             updateCityList();
         }
@@ -281,7 +276,7 @@ $(document).ready(function () {
                 $("#current-city").prepend(h6);
             });
 
-            // ajax call to get data for 5 day forecast
+            // getting data for 5 day forecast
 
             $.ajax({
                 url: fiveDayURL,
@@ -360,19 +355,29 @@ $(document).ready(function () {
         lookupCity(attrCity);
     });
 
+   
     // delete button for city
-    $(document).on("click", "button.delete", function (e, city) {
+    $(document).on("click", "button.delete", function (e) {
         e.preventDefault();
-        // console.log("click");
-        var attrCity = $(this).attr("city-name");
-        for (let i = 0; i < cityList.length; i++) {
-            cityList.splice(city === attrCity[i]);
-        }
+        
+        // calling current city list
+        updateCityList(cityList);
+        // console.log(cityList);
 
-        removeFromLocalStorage(attrCity);
-        renderCityList();
+        // setting attr on delete buttons to get the city name that needs to be deleted
+        var attrCity = $(this).attr("city-name");
+        console.log(attrCity);
+       
+        // returning new array that doesn't contain deleted city
+       cityList = cityList.filter(idx=> idx !== attrCity);
+       console.log(cityList);
+       
+        // writing new array to local storage
+        localStorage.setItem("cityList", JSON.stringify(cityList));
+        renderCityList(cityList);
     });
 
+   
    
     // converting farenheits to celcius 
     $(".celcius").on("click",  function (e) {
@@ -392,8 +397,9 @@ $(document).ready(function () {
         console.log(forecastTemp);
         console.log(typeof forecastTemp);
 
+    // need help here
 
-        // forecastTemp.forEach(idx=> $(".temp").text(forecastTemp[idx])); //doesn't work
+    // forecastTemp.forEach(idx=> $(".temp").text(forecastTemp[idx])); //doesn't work
     
       
      Object.keys(forecastTemp).find(idx=> $(".temp").text("Temp: " + forecastTemp[idx] + "°C"));// returns first item of array for all elements
