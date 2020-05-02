@@ -16,7 +16,6 @@
 
 <body>
     <!-- navbar-->
-
     <nav class="navbar navbar-expand-lg ">
         <button class="celcius btn-sm btn-outline-secondary" type="button">°C</button>
         <span class="navbar-brand ">Weather Dashboard</span>
@@ -25,10 +24,9 @@
     <br>
 
     <!-- search area input-->
-
     <div class="container">
         <div class="row">
-            <div class="col-md-3   col-sm-12">
+            <div class="col-md-3  col-sm-12">
                 <h6>Search for a city:</h6>
                 <form autocomplete="off">
                     <input type="text" placeholder="Search.." name="search" id="search-line">
@@ -36,49 +34,44 @@
                     </input>
                 </form>
                 <br>
-
-                <!--city search history-->
             </div>
         </div>
 
+          <!--list of searched cities-->
         <div class="row">
             <div class="col-md-3 col-sm-12">
                 <div id="city-list"></div>
             </div>
-          
 
 
-
-            <!--current city information-->
+            <!--current city weather-->
             <br>
             <div class="col-md-8 offset-sm-1">
+                
                 <div class="col-md-11 col-sm-12">
                     <div id="current-city"></div>
                 </div>
 
-              
 
                 <!--5 days weather forecast-->
-
-              
                 <div class="col-md-8 offset-sm-2 col-sm-12">
                     <br>
                     <div class="heading"></div>
                 </div>
                 <div class="col-12">
                     <div id="five-day">
-                         </div>
+                    </div>
                 </div>
 
             </div>
 
-        
+
             <br><br>
 
         </div>
 
-</div>
-        <script src="main.js"></script>
+    </div>
+    <script src="main.js"></script>
 
 </body>
 

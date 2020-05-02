@@ -1,27 +1,21 @@
 $(document).ready(function () {
 
-    // prompting user to allow location access to get their lon and lat data
-    userLocationWeather();
-    //  api key  
     var appId = "4711f10374bfd72a56667451d010a86c";
-
-    // all query urls needed for making ajax calls
     var queryURL = "https://api.openweathermap.org/data/2.5/weather";
     var fiveDayURL = "https://api.openweathermap.org/data/2.5/forecast";
     var uvUrl = "https://api.openweathermap.org/data/2.5/uvi";
 
     var cityList = [];
-    // moment.js library to display current day
+    // moment.js
     var currentDay = moment().format('dddd');
-
+    
+    userLocationWeather();
     // getting user geolocation
     function userLocationWeather() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var lat = position.coords.latitude;
-                var lon = position.coords.longitude;
-                // console.log(lat);
-                // console.log(lon);
+            navigator.geolocation.getCurrentPosition(function (resp) {
+                var lat = resp.coords.latitude;
+                var lon = resp.coords.longitude;
                 getWeather(lat, lon);
             });
         } else {
@@ -29,10 +23,8 @@ $(document).ready(function () {
         }
     }
 
-
-    // getting weather for user's location
+    //  user's geolocation weather
     function getWeather(lat, lon) {
-
         // current weather
         $.ajax({
             url: queryURL,
@@ -41,15 +33,15 @@ $(document).ready(function () {
                 APPID: appId,
                 lat: lat,
                 lon: lon,
-                units: "imperial" // For temperature in Fahrenheits 
+                units: "imperial", // For temperature in Fahrenheits 
             }
         }).then(function (response) {
-            // console.log(response);
+            console.log(response);
 
-            // current date using moment.js 
-            var h6 = $("<h6>");
-            h6.text(currentDay);
-            $("#current-city").prepend(h6);
+            // current date
+            var p = $("<p>");
+            p.text(currentDay);
+            $("#current-city").prepend(p);
 
             // user's location name
             var h4 = $("<h4>");
@@ -64,25 +56,22 @@ $(document).ready(function () {
             // temperature
             var li1 = $("<li>");
             li1.text("Temperature: " + response.main.temp + " F");
-            li1.val(response.main.temp);
             li1.addClass("current-temp");
             $("#current-city").append(li1);
-            
+
             // humidity
             var li2 = $("<li>");
             li2.text("Humidity: " + response.main.humidity + " %");
-            li2.val(response.main.humidity);
             $("#current-city").append(li2);
 
             // wind speed
             var li3 = $("<li>");
             li3.text("Wind speed: " + response.wind.speed + " MPH");
-            li3.val(response.wind.speed);
             $("#current-city").append(li3);
         });
 
-        // ajax call to get data for 5 day forecast
 
+        //  5 day forecast
         $.ajax({
             url: fiveDayURL,
             method: "GET",
@@ -95,28 +84,21 @@ $(document).ready(function () {
         }).then(function (result) {
             // console.log(result);
 
-            // looping through list array. it returns  40 objects:
-            // 5 days forecast for every 3 hours
             var h3 = $("<h3>");
-            h3.text("Five Day Forecast")
+            h3.text("Five Day Forecast");
             $(".heading").append(h3);
-
 
             for (var i = 0; i < 8; i++) {
                 var day = result.list[i * 8];
 
-
-                // placeholders for 5 day forecast
                 var display = $("<div>");
                 display.addClass("col-md-2 display");
 
                 //  date
                 var p = $("<p>");
-                // console.log(day.dt_txt.split(" "));
-                p.text(day.dt_txt.split(" ")[0]); //using split method, so the hour doesn't get displayed
+                p.text(day.dt_txt.split(" ")[0]);
                 display.append(p);
                 $("#five-day").append(display);
-               
 
                 //  weather icon
                 var image = $("<img>");
@@ -125,26 +107,22 @@ $(document).ready(function () {
                 $("#five-day").append(display);
 
                 // temperature
-                var p = $("<h6>");
-                p.text("Temp: " + day.main.temp + " F");
-                display.append(p);
-                p.addClass("temp");
-                p.attr("id");
+                var h6 = $("<h6>");
+                h6.text("Temp: " + day.main.temp + " F");
+                display.append(h6);
+                h6.addClass("temp");
                 $("#five-day").append(display);
-                
-            
+
                 // humidity
                 var p = $("<p>");
                 p.text("Humidity: " + day.main.humidity + " %");
                 display.append(p);
                 $("#five-day").append(display);
             }
-
         });
     }
 
-
-    // dynamically generating buttons to display  city search history
+    // searcher city list
     var renderCityList = function () {
         var textBlock = $("div#city-list");
         textBlock.html("").addClass("text-block");
@@ -153,59 +131,48 @@ $(document).ready(function () {
             // console.log(cityList);
             for (var i = 0; i < cityList.length; i++) {
 
-
                 var button = $("<button>");
                 button.addClass("col-10 btn");
                 button.attr("city-name", cityList[i]);
                 button.text(cityList[i]);
                 $("div#city-list").append(button);
 
-
+                // city delete button
                 var del = $("<button>");
                 del.text("x");
                 del.attr("city-name", cityList[i]);
                 del.addClass("col-1 delete");
                 $("div#city-list").append(del);
             }
-
         }
     }
 
-    // =======================================Local Storage===================================//
-
-    // storing searched cities list into local storage 
     var updateCityList = function () {
         localStorage.setItem("cityList", JSON.stringify(cityList));
     }
 
-    // getting data from local storage
     var getFromLocalStorage = function () {
         if (localStorage.getItem("cityList")) {
             cityList = JSON.parse(localStorage.getItem("cityList"));
         }
-        // console.log(cityList);
     }
 
+    //----------------- searched city weather------------//
 
-    //----------------- displaying weather for a city that user is searching for------------//
-
-    // adding searched city to a list
     var lookupCity = function (city) {
+        // adding searched city to a list
         if (cityList.indexOf(city) === -1) {
             // console.log("adding city: " + city);
             cityList.push(city);
             updateCityList();
         }
 
-        // console.log("lookup");
-
         // clearing previous content
         $("#current-city").html("");
         $("#five-day").html("");
         $(".heading").html("");
 
-        //  ajax call for a current day weather query 
-
+        //  current day weather 
         $.ajax({
             url: queryURL,
             method: "GET",
@@ -217,8 +184,7 @@ $(document).ready(function () {
         }).then(function (response) {
             // console.log(response);
 
-
-            // displaying the city that user is searching for    
+            // city name   
             var h4 = $("<h4>");
             h4.text(response.name);
             $("#current-city").append(h4);
@@ -232,24 +198,19 @@ $(document).ready(function () {
             var li1 = $("<li>");
             li1.addClass("li1");
             li1.text("Temperature: " + response.main.temp + " F");
-            li1.val(response.main.temp);
             li1.addClass("current-temp");
             $("#current-city").append(li1);
-
 
             // humidity
             var li2 = $("<li>");
             li2.text("Humidity: " + response.main.humidity + " %");
-            li2.val(response.main.humidity);
             $("#current-city").append(li2);
 
             // wind speed
             var li3 = $("<li>");
             li3.text("Wind speed: " + response.wind.speed + " MPH");
-            li3.val(response.wind.speed);
             $("#current-city").append(li3);
 
-            // ajax call to get data for uv index
             var cityLon = response.coord.lon;
             var cityLat = response.coord.lat;
 
@@ -276,8 +237,7 @@ $(document).ready(function () {
                 $("#current-city").prepend(h6);
             });
 
-            // getting data for 5 day forecast
-
+            // 5 day forecast
             $.ajax({
                 url: fiveDayURL,
                 method: "GET",
@@ -289,8 +249,6 @@ $(document).ready(function () {
             }).then(function (result) {
                 // console.log(result);
 
-                // looping through list array. it returns  40 objects:
-                // 5 days forecast for every 3 hours
                 var h3 = $("<h3>");
                 h3.text("Five Day Forecast")
                 $(".heading").append(h3);
@@ -299,18 +257,14 @@ $(document).ready(function () {
                 for (var i = 0; i < 8; i++) {
                     var day = result.list[i * 8];
 
-
-                    // placeholders for 5 day forecast
                     var display = $("<div>");
                     display.addClass("col-md-2 display");
 
                     //  date
                     var p = $("<p>");
-                    console.log(day.dt_txt.split(" "));
-                    p.text(day.dt_txt.split(" ")[0]); //using split method, so the hour doesn't get displayed
+                    p.text(day.dt_txt.split(" ")[0]);
                     display.append(p);
                     $("#five-day").append(display);
-                   
 
                     //  weather icon
                     var image = $("<img>");
@@ -323,7 +277,6 @@ $(document).ready(function () {
                     p.text("Temp: " + day.main.temp + " F");
                     display.append(p);
                     p.addClass("temp");
-                    p.attr("id");
                     $("#five-day").append(display);
 
                     // humidity
@@ -332,13 +285,10 @@ $(document).ready(function () {
                     display.append(p);
                     $("#five-day").append(display);
                 }
-
             });
         });
-
         renderCityList();
     }
-
 
     // search button
     $("#search-button").on("click", function (e) {
@@ -348,71 +298,57 @@ $(document).ready(function () {
         lookupCity(city);
     });
 
-    //history buttons
+    // displaying weather for each city in a list on click
     $(document).on("click", "button.btn", function (e) {
         e.preventDefault();
         var attrCity = $(this).attr("city-name");
         lookupCity(attrCity);
     });
 
-   
     // delete button for city
     $(document).on("click", "button.delete", function (e) {
         e.preventDefault();
-        
-        // calling current city list
+
+        // current city list
         updateCityList(cityList);
         // console.log(cityList);
 
-        // setting attr on delete buttons to get the city name that needs to be deleted
+        // city name that needs to be deleted
         var attrCity = $(this).attr("city-name");
-        console.log(attrCity);
-       
-        // returning new array that doesn't contain deleted city
-       cityList = cityList.filter(idx=> idx !== attrCity);
-       console.log(cityList);
-       
-        // writing new array to local storage
+        // console.log(attrCity);
+
+        // removing city from array
+        cityList = cityList.filter(idx => idx !== attrCity);
+        // console.log(cityList);
+
         localStorage.setItem("cityList", JSON.stringify(cityList));
         renderCityList(cityList);
     });
 
    
-   
     // converting farenheits to celcius 
-    $(".celcius").on("click",  function (e) {
+    $(".celcius").on("click", function (e) {
         e.preventDefault();
         //current day
         let currentTemp = $(".current-temp").text();
-        currentTemp = currentTemp.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g); // pulling out numbers
-        let temp = Math.round((currentTemp - 32) / 1.8); // converts farenheits to celcius and returns numeric value 
-        $(".current-temp").text("Temperature: " + temp + "°C"); //renders weather on celcius
-
-//===============================================================================================================//
-
+        // console.log(currentTemp);
+        currentTemp = currentTemp.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g);
+        let temp = Math.round((currentTemp - 32) / 1.8); // converts farenheits to celcius 
+        $(".current-temp").text("Temperature: " + temp + "°C");
+   
         // five day forecast
         let forecast = $(".temp").text();
-        forecast = forecast.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g); 
-        let forecastTemp = forecast.map(idx =>  Math.round((idx - 32) / 1.8));// returns array of celcius weather and converts strings to numbers
+        forecast = forecast.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g);
+        let forecastTemp = forecast.map(idx =>  Math.round((idx - 32) / 1.8)); // converts farenheits to celcius 
         console.log(forecastTemp);
-        console.log(typeof forecastTemp);
-
-    // need help here
-
-    // forecastTemp.forEach(idx=> $(".temp").text(forecastTemp[idx])); //doesn't work
-    
-      
-     Object.keys(forecastTemp).find(idx=> $(".temp").text("Temp: " + forecastTemp[idx] + "°C"));// returns first item of array for all elements
-        
-    //    for(let i=0; i<forecastTemp.length; i++){
-    //        $(".temp").text(forecastTemp[i]);
-    //    }  // returns last item of array for all elements
-     
-        let attr = $(this).attr("id");
-        console.log(attr);// undefined
+   
+        forecast.forEach((val, idx)=> {
+           let selector = $(".temp");
+           selector = selector[idx];
+           $(selector).text("Temp: " + parseFloat(forecastTemp[idx]) + "°C");
+        })
     });
 
-       
     getFromLocalStorage();
     renderCityList();
 });
