@@ -8,7 +8,7 @@ $(document).ready(function () {
     var cityList = [];
     // moment.js
     var currentDay = moment().format('dddd');
-    
+
     userLocationWeather();
     // getting user geolocation
     function userLocationWeather() {
@@ -330,19 +330,33 @@ $(document).ready(function () {
         renderCityList(cityList);
     });
 
-   
     // converting farenheits to celcius 
     $(".celcius").on("click", function (e) {
+        e.preventDefault();
+        
+        let temp = $(".temp").text();
+        temp = temp.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g);
+        let cTemp = temp.map(idx => Math.round((idx - 32) / 1.8)); // converts farenheits to celcius 
+
+        temp.forEach((val, idx) => {
+            let selector = $(".temp");
+            selector = selector[idx];
+            $(selector).text("Temp: " + cTemp[idx] + "°C");
+        })
+    });
+
+    //  converting celcius back to farenheits
+    $(".farenheits").on("click", function (e) {
         e.preventDefault();
        
         let temp = $(".temp").text();
         temp = temp.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g);
-        let cTemp = temp.map(idx =>  Math.round((idx - 32) / 1.8)); // converts farenheits to celcius 
-
-        temp.forEach((val, idx)=> {
-           let selector = $(".temp");
-           selector = selector[idx];
-           $(selector).text("Temp: " + cTemp[idx] + "°C");
+        let fTemp = temp.map(idx=> Math.round(idx * 9 / 5 + 32));
+        
+        temp.forEach((val, idx) => {
+            let selector = $(".temp");
+            selector = selector[idx];
+            $(selector).text("Temp: " + fTemp[idx] + "°F");
         })
     });
 
