@@ -41,6 +41,7 @@ $(document).ready(function () {
             // current date
             var p = $("<p>");
             p.text(currentDay);
+            p.addClass("city");
             $("#current-city").prepend(p);
 
             // user's location name
@@ -55,18 +56,19 @@ $(document).ready(function () {
 
             // temperature
             var li1 = $("<li>");
-            li1.text("Temperature: " + response.main.temp + " F");
-            li1.addClass("current-temp");
+            li1.text("Temperature: " + (response.main.temp).toFixed(0) + "°F");
+            li1.addClass("temp");
             $("#current-city").append(li1);
 
             // humidity
             var li2 = $("<li>");
-            li2.text("Humidity: " + response.main.humidity + " %");
+            li2.text("Humidity: " + response.main.humidity + "%");
             $("#current-city").append(li2);
 
             // wind speed
             var li3 = $("<li>");
-            li3.text("Wind speed: " + response.wind.speed + " MPH");
+            li3.text("Wind speed: " + (response.wind.speed).toFixed(0) + " MPH");
+            li3.addClass("li3");
             $("#current-city").append(li3);
         });
 
@@ -96,7 +98,8 @@ $(document).ready(function () {
 
                 //  date
                 var p = $("<p>");
-                p.text(day.dt_txt.split(" ")[0]);
+                let m = moment(day.dt_txt.split(" ")[0]).format('dddd');
+                p.text(m);
                 display.append(p);
                 $("#five-day").append(display);
 
@@ -107,15 +110,15 @@ $(document).ready(function () {
                 $("#five-day").append(display);
 
                 // temperature
-                var h6 = $("<h6>");
-                h6.text("Temp: " + day.main.temp + " F");
-                display.append(h6);
-                h6.addClass("temp");
+                var p = $("<p>");
+                p.text("Temp: " + (day.main.temp).toFixed(0) + "°F");
+                display.append(p);
+                p.addClass("temp");
                 $("#five-day").append(display);
 
                 // humidity
                 var p = $("<p>");
-                p.text("Humidity: " + day.main.humidity + " %");
+                p.text("Humidity: " + day.main.humidity + "%");
                 display.append(p);
                 $("#five-day").append(display);
             }
@@ -187,6 +190,7 @@ $(document).ready(function () {
             // city name   
             var h4 = $("<h4>");
             h4.text(response.name);
+            h4.addClass("city");
             $("#current-city").append(h4);
 
             // weather icon
@@ -197,18 +201,18 @@ $(document).ready(function () {
             // temperature
             var li1 = $("<li>");
             li1.addClass("li1");
-            li1.text("Temperature: " + response.main.temp + " F");
-            li1.addClass("current-temp");
+            li1.text("Temperature: " + (response.main.temp).toFixed(0) + "°F");
+            li1.addClass("temp");
             $("#current-city").append(li1);
 
             // humidity
             var li2 = $("<li>");
-            li2.text("Humidity: " + response.main.humidity + " %");
+            li2.text("Humidity: " + response.main.humidity + "%");
             $("#current-city").append(li2);
 
             // wind speed
             var li3 = $("<li>");
-            li3.text("Wind speed: " + response.wind.speed + " MPH");
+            li3.text("Wind speed: " + (response.wind.speed).toFixed(0) + " MPH");
             $("#current-city").append(li3);
 
             var cityLon = response.coord.lon;
@@ -262,7 +266,8 @@ $(document).ready(function () {
 
                     //  date
                     var p = $("<p>");
-                    p.text(day.dt_txt.split(" ")[0]);
+                    let m = moment(day.dt_txt.split(" ")[0]).format('dddd');
+                    p.text(m);
                     display.append(p);
                     $("#five-day").append(display);
 
@@ -274,14 +279,14 @@ $(document).ready(function () {
 
                     // temperature
                     var p = $("<p>");
-                    p.text("Temp: " + day.main.temp + " F");
+                    p.text("Temp: " + (day.main.temp).toFixed(0) + "°F");
                     display.append(p);
                     p.addClass("temp");
                     $("#five-day").append(display);
 
                     // humidity
                     var p = $("<p>");
-                    p.text("Humidity: " + day.main.humidity + " %");
+                    p.text("Humidity: " + day.main.humidity + "%");
                     display.append(p);
                     $("#five-day").append(display);
                 }
@@ -329,23 +334,15 @@ $(document).ready(function () {
     // converting farenheits to celcius 
     $(".celcius").on("click", function (e) {
         e.preventDefault();
-        //current day
-        let currentTemp = $(".current-temp").text();
-        // console.log(currentTemp);
-        currentTemp = currentTemp.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g);
-        let temp = Math.round((currentTemp - 32) / 1.8); // converts farenheits to celcius 
-        $(".current-temp").text("Temperature: " + temp + "°C");
-   
-        // five day forecast
-        let forecast = $(".temp").text();
-        forecast = forecast.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g);
-        let forecastTemp = forecast.map(idx =>  Math.round((idx - 32) / 1.8)); // converts farenheits to celcius 
-        console.log(forecastTemp);
-   
-        forecast.forEach((val, idx)=> {
+       
+        let temp = $(".temp").text();
+        temp = temp.match(/[-]{0,1}[\d]*[.]{0,1}[\d]+/g);
+        let cTemp = temp.map(idx =>  Math.round((idx - 32) / 1.8)); // converts farenheits to celcius 
+
+        temp.forEach((val, idx)=> {
            let selector = $(".temp");
            selector = selector[idx];
-           $(selector).text("Temp: " + parseFloat(forecastTemp[idx]) + "°C");
+           $(selector).text("Temp: " + cTemp[idx] + "°C");
         })
     });
 

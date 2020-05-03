@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://rawgit.com/moment/moment/2.2.1/min/moment.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -18,7 +19,9 @@
     <!-- navbar-->
     <nav class="navbar navbar-expand-lg ">
         <button class="celcius btn-sm btn-outline-secondary" type="button">°C</button>
-        <span class="navbar-brand ">Weather Dashboard</span>
+        <span>|</span>
+        <button class="farenheits btn-sm btn-outline-secondary" type="button">°F</button>
+        <span class="navbar-brand ">Weather Dashboard <i class="far fa-sun"></i></i></span>
     </nav>
 
     <br>
@@ -59,8 +62,7 @@
                     <div class="heading"></div>
                 </div>
                 <div class="col-12">
-                    <div id="five-day">
-                    </div>
+                    <div id="five-day"></div>
                 </div>
 
             </div>
