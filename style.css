@@ -9,8 +9,9 @@ p, h3{
 .text-block{
     padding:0px;
 }
-.fa-sun{
-    color:goldenrod;
+
+.fa-cloud{
+    color:rgb(25, 119, 114);
 }
 
 .celcius{
@@ -24,7 +25,6 @@ p, h3{
     border-color:black;
 }
 
-
 .farenheits{
     color:white;
     border-color: black;
@@ -34,7 +34,6 @@ p, h3{
     background-color: black;
     border-color:black;
 }
-
 
 .btn{
     height: 40px;
@@ -124,6 +123,13 @@ img{
     background-color: black;
     color:white;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-transform: uppercase;
+    font-size: small;
+}
+
+.search{
+    text-transform: uppercase;
+    font-size: small;
 }
 
 #search-line{
